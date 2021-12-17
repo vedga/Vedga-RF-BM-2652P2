@@ -15,4 +15,5 @@
 	<templateProperties value="id=znp_CC1352P_2_LAUNCHXL_tirtos_ccs.projectspec.znp_CC1352P_2_LAUNCHXL_tirtos_ccs,type=rtsc,xdcToolsVersion=3.62.01.15,target=ti.targets.arm.elf.M4F,platform=ti.platforms.simplelink:CC1352P1F3,buildProfile=release,isHybrid=true,configuroOptions= --compileOptions &quot;${COMPILER_FLAGS} &quot;"/>
 	<origin value="C:\TI\simplelink_cc13xx_cc26xx_sdk_5_30_01_01\examples\rtos\CC1352P_2_LAUNCHXL\zstack\znp\tirtos\ccs\znp_CC1352P_2_LAUNCHXL_tirtos_ccs.projectspec"/>
 	<filesToOpen value="README.html"/>
+	<isTargetManual value="false"/>
 </projectOptions>

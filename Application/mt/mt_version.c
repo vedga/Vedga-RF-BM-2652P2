@@ -43,16 +43,29 @@
 #include "zcomdef.h"
 #include "mt_version.h"
 
+
 /******************************************************************************
  * CONSTANTS
  *****************************************************************************/
 const uint8_t MTVersionString[] = {
+#if !defined ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER
                                    2,  /* Transport protocol revision */
                                    0,  /* Product ID */
                                    2,  /* Software major release number */
                                    7,  /* Software minor release number */
                                    1,  /* Software maintenance release number */
-                                 };
+#else
+                                   2,  /* Transport protocol revision */
+                                   1,  /* Product ID */
+                                   2,  /* Software major release number */
+                                   7,  /* Software minor release number */
+                                   1,  /* Software maintenance release number */
+                                   ((ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER >> 0)  & 0xFF),
+                                   ((ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER >> 8)  & 0xFF),
+                                   ((ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER >> 16) & 0xFF),
+                                   ((ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER >> 24) & 0xFF),
+#endif
+};
 
 /******************************************************************************
- */
+*/
