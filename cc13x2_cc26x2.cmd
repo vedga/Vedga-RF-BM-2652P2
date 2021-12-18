@@ -67,9 +67,15 @@
 /* must be located at the beginning of the application.                      */
 
 #define FLASH_BASE              0x00000000
+#if 0
 #define FLASH_SIZE              0x52000
 #define FLASH_NV_BASE           0x52000
 #define FLASH_NV_SIZE           0x4000
+#else
+#define FLASH_SIZE              0x50000
+#define FLASH_NV_BASE           0x50000
+#define FLASH_NV_SIZE           0x6000
+#endif
 #define FLASH_LAST_BASE         0x56000
 #define FLASH_LAST_SIZE         0x2000
 

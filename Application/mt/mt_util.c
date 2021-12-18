@@ -128,6 +128,11 @@ static void MT_UtilAPSME_LinkKeyNvIdGet(uint8_t *pBuf);
 #endif //MT_SYS_KEY_MANAGEMENT
 static void MT_UtilAPSME_RequestKeyCmd(uint8_t *pBuf);
 static void MT_UtilAssocCount(uint8_t *pBuf);
+#if defined(ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER)
+static void MT_UtilLedControl(uint8_t *pBuf);
+static void MT_UtilAssocRemove(uint8_t *pBuf);
+static void MT_UtilAssocAdd(uint8_t *pBuf);
+#endif
 static void MT_UtilAssocFindDevice(uint8_t *pBuf);
 static void MT_UtilAssocGetWithAddress(uint8_t *pBuf);
 static void MT_UtilBindAddEntry(uint8_t *pBuf);
@@ -260,6 +265,12 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
     MT_UtilAssocCount(pBuf);
     break;
 
+#if defined(ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER)
+  case MT_UTIL_LED_CONTROL:
+    MT_UtilLedControl(pBuf);
+    break;
+#endif
+
   case MT_UTIL_ASSOC_FIND_DEVICE:
     MT_UtilAssocFindDevice(pBuf);
     break;
@@ -271,6 +282,16 @@ uint8_t MT_UtilCommandProcessing(uint8_t *pBuf)
   case MT_UTIL_BIND_ADD_ENTRY:
     MT_UtilBindAddEntry(pBuf);
     break;
+
+#if defined(ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER)
+  case MT_UTIL_ASSOC_REMOVE:
+    MT_UtilAssocRemove(pBuf);
+    break;
+
+  case MT_UTIL_ASSOC_ADD:
+    MT_UtilAssocAdd(pBuf);
+    break;
+#endif
 
   case MT_UTIL_SYNC_REQ:
     MT_UtilSync();
@@ -1374,6 +1395,97 @@ static void MT_UtilAssocCount(uint8_t *pBuf)
 
   MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 2, pBuf);
 }
+
+#if defined(ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER)
+/***************************************************************************************************
+ * @fn      MT_UtilLedControl
+ *
+ * @brief   Proxy the LedControl() function.
+ *
+ * @param   pBuf - pointer to the received buffer
+ *
+ * @return  void
+ ***************************************************************************************************/
+static void MT_UtilLedControl(uint8_t *pBuf)
+{
+  uint8_t cmdId = pBuf[MT_RPC_POS_CMD1];
+
+#if 0
+  pBuf += MT_RPC_FRAME_HDR_SZ;
+
+  uint8_t mode =  pBuf[1];
+
+  if (gLedHandle == NULL) {
+    LED_Params ledParams;
+    LED_Params_init(&ledParams);
+    gLedHandle = LED_open(CONFIG_LED_GREEN, &ledParams);
+  }
+
+  if (mode==0) {
+    LED_setOff(gLedHandle);
+  } else {
+    LED_setOn(gLedHandle, LED_BRIGHTNESS_MAX);
+  }
+#endif
+
+  uint8_t retValue = 0;
+  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
+}
+
+/***************************************************************************************************
+ * @fn      MT_UtilAssocRemove
+ *
+ * @brief   Proxy the AssocRemove() function.
+ *
+ * @param   pBuf - pointer to the received buffer
+ *
+ * @return  void
+ ***************************************************************************************************/
+static void MT_UtilAssocRemove(uint8_t *pBuf)
+{
+  uint8_t cmdId;
+  uint8_t ieeeAddr[Z_EXTADDR_LEN];
+  uint8_t retValue = 0;
+
+  // parse header
+  cmdId = pBuf[MT_RPC_POS_CMD1];
+  pBuf += MT_RPC_FRAME_HDR_SZ;
+
+  /* IeeAddress */
+  OsalPort_memcpy(ieeeAddr, pBuf, Z_EXTADDR_LEN);
+
+  AssocRemove(ieeeAddr);
+
+  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
+}
+
+/***************************************************************************************************
+ * @fn      MT_UtilAssocAdd
+ *
+ * @brief   Proxy the AssocAdd() function.
+ *
+ * @param   pBuf - pointer to the received buffer
+ *
+ * @return  void
+ ***************************************************************************************************/
+static void MT_UtilAssocAdd(uint8_t *pBuf)
+{
+  uint8_t cmdId;
+  uint8_t retValue = 0;
+
+  // parse header
+  cmdId = pBuf[MT_RPC_POS_CMD1];
+  pBuf += MT_RPC_FRAME_HDR_SZ;
+
+  AssocAddNew(
+    BUILD_UINT16(pBuf[Z_EXTADDR_LEN], pBuf[Z_EXTADDR_LEN + 1]),
+    pBuf,
+    pBuf[Z_EXTADDR_LEN + 2]
+  );
+
+  MT_BuildAndSendZToolResponse(((uint8_t)MT_RPC_CMD_SRSP | (uint8_t)MT_RPC_SYS_UTIL), cmdId, 1, &retValue);
+}
+#endif
 
 /***************************************************************************************************
  * @fn      MT_UtilAssocFindDevice

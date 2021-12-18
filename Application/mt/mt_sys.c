@@ -221,7 +221,12 @@ uint8_t MT_SysCommandProcessing(uint8_t *pBuf)
   switch (pBuf[MT_RPC_POS_CMD1])
   {
     case MT_SYS_RESET_REQ:
+        // @TODO: Fix reset if JTAG connected
+#if 1
       MT_SysReset(pBuf);
+#else
+      MT_SysResetInd();
+#endif
       break;
 
     case MT_SYS_PING:

@@ -415,6 +415,10 @@ extern "C"
 #define MT_UTIL_CALLBACK_SUB_CMD             0x06
 #define MT_UTIL_TIME_ALIVE                   0x09
 
+#if defined(ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER)
+#define MT_UTIL_LED_CONTROL                  0x0A
+#endif
+
 #define MT_UTIL_TEST_LOOPBACK                0x10
 #define MT_UTIL_DATA_REQ                     0x11
 
@@ -441,6 +445,11 @@ extern "C"
 #define MT_UTIL_SRNG_GENERATE                0x4C
 #endif
 #define MT_UTIL_BIND_ADD_ENTRY               0x4D
+
+#if defined(ZIGBEE_HERDSMAN_CODE_REVISION_NUMBER)
+#define MT_UTIL_ASSOC_REMOVE                 0x63 // Custom command
+#define MT_UTIL_ASSOC_ADD                    0x64 // Custom command
+#endif
 
 #define MT_UTIL_ZCL_KEY_EST_INIT_EST         0x80
 #define MT_UTIL_ZCL_KEY_EST_SIGN             0x81

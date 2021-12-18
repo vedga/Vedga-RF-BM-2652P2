@@ -25,7 +25,6 @@ const ECDSA    = scripting.addModule("/ti/drivers/ECDSA");
 const ECDSA1   = ECDSA.addInstance();
 const NVS      = scripting.addModule("/ti/drivers/NVS");
 const NVS1     = NVS.addInstance();
-const NVS2     = NVS.addInstance();
 const Power    = scripting.addModule("/ti/drivers/Power");
 const RF       = scripting.addModule("/ti/drivers/RF");
 const SHA2     = scripting.addModule("/ti/drivers/SHA2");
@@ -77,14 +76,8 @@ ECDSA1.$name = "CONFIG_ECDSA_0";
 
 NVS1.$name                    = "CONFIG_NVSINTERNAL";
 NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSCC26XX0";
-NVS1.internalFlash.regionSize = 0x4000;
-NVS1.internalFlash.regionBase = 0x52000;
-
-NVS2.$name                          = "CONFIG_NVSEXTERNAL";
-NVS2.nvsType                        = "External";
-NVS2.externalFlash.$name            = "ti_drivers_nvs_NVSSPI25X0";
-NVS2.externalFlash.regionSize       = 0x256000;
-NVS2.externalFlash.verifyBufferSize = 64;
+NVS1.internalFlash.regionBase = 0x50000;
+NVS1.internalFlash.regionSize = 0x6000;
 
 RF.pinSelectionAntenna                      = 3;
 RF.rfAntennaPinSymbol0                      = "CONFIG_RF_24GHZ";
@@ -118,27 +111,6 @@ LED1.gpioPin.$name  = "CONFIG_GPIO_RLED";
 LED2.$name          = "CONFIG_LED_GREEN";
 LED2.ledPin.$assign = "ball.12";
 LED2.gpioPin.$name  = "CONFIG_GPIO_GLED";
-
-const NVSSPI25XDevice                         = scripting.addModule("/ti/drivers/nvs/NVSSPI25XDevice", {}, false);
-const NVSSPI25XDevice1                        = NVSSPI25XDevice.addInstance({}, false);
-NVSSPI25XDevice1.$name                        = "CONFIG_NVS_SPI_0";
-NVS2.externalFlash.spiFlashDevice             = NVSSPI25XDevice1;
-NVSSPI25XDevice1.slaveSelect.$assign          = "ball.30";
-NVSSPI25XDevice1.slaveSelectPinInstance.$name = "CONFIG_GPIO_0";
-
-const SPI                          = scripting.addModule("/ti/drivers/SPI", {}, false);
-const SPI1                         = SPI.addInstance({}, false);
-SPI1.$name                         = "CONFIG_SPI_0";
-NVSSPI25XDevice1.sharedSpiInstance = SPI1;
-SPI1.spi.$assign                   = "SSI0";
-SPI1.spi.sclkPin.$assign           = "ball.16";
-SPI1.spi.misoPin.$assign           = "ball.14";
-SPI1.spi.mosiPin.$assign           = "ball.15";
-SPI1.spi.dmaRxChannel.$assign      = "DMA_CH3";
-SPI1.spi.dmaTxChannel.$assign      = "DMA_CH4";
-SPI1.sclkPinInstance.$name         = "CONFIG_PIN_SPI_SCLK";
-SPI1.misoPinInstance.$name         = "CONFIG_PIN_SPI_MISO";
-SPI1.mosiPinInstance.$name         = "CONFIG_PIN_SPI_MOSI";
 
 zstack.deviceType                            = "znp";
 zstack.deviceTypeReadOnly                    = true;

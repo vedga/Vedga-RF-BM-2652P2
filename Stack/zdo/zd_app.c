@@ -972,6 +972,7 @@ void ZDApp_SaveNetworkStateEvt( void )
  #endif
 
   // Update the Network State in NV
+  // @TODO: Do check error code from NLME_UpdateNV. Can be not SUCCESS if NV memory is full.
   NLME_UpdateNV( NWK_NV_NIB_ENABLE        |
                  NWK_NV_DEVICELIST_ENABLE |
                  NWK_NV_BINDING_ENABLE    |
